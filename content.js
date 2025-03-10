@@ -392,7 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('ytgpc-resume-yes').addEventListener('click', () => {
               video.currentTime = history.currentTime;
               resumeDiv.remove();
-              showNotification(`${resumeTime} から続きを再生します`);
+              showYouTubeNotification(`${resumeTime} から続きを再生します`);
             });
             
             document.getElementById('ytgpc-resume-no').addEventListener('click', () => {
