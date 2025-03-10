@@ -1,0 +1,11 @@
+
+
+# VS Code の設定
+.vscode/
+
+# デバッグ用のログファイル
+*.log
+
+# OS関連の一時ファイル
+.DS_Store
+Thumbs.db
