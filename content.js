@@ -202,7 +202,7 @@ function toggleCaptions() {
   if (captionsButton) {
     captionsButton.click();
     const isCaptionsOn = captionsButton.getAttribute('aria-pressed') === 'true';
-    showYouTubeNotification(isCaptionsOn ? '字幕をオン' : '字幕をオフ');
+    showYouTubeNotification(isCaptionsOn ? '字幕をオフ' : '字幕をオン');
   } else {
     showYouTubeNotification('字幕が利用できません');
   }
