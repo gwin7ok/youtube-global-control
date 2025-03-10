@@ -182,6 +182,8 @@ function performAction(action) {
       break;
   }
 
+  // 視聴履歴をローカルストレージに保存
+  saveWatchHistory(video);
 }
 
 // 字幕表示切り替え関数
@@ -279,7 +281,6 @@ function navigateToNextBookmark(video) {
   }
 }
 
-
 // 秒数を mm:ss 形式にフォーマット
 function formatTime(seconds) {
   const min = Math.floor(seconds / 60);
@@ -287,7 +288,89 @@ function formatTime(seconds) {
   return `${min}:${sec.toString().padStart(2, '0')}`;
 }
 
+// 視聴履歴を保存
+function saveWatchHistory(video) {
+  const videoId = getYouTubeVideoId();
+  if (!videoId) return;
+  
+  // 現在の時間と最大時間を保存
+  const currentTime = video.currentTime;
+  const duration = video.duration;
+  const title = document.title.replace(' - YouTube', '');
+  
+  chrome.storage.local.get(['watchHistory'], function(result) {
+    let watchHistory = result.watchHistory || {};
+    
+    watchHistory[videoId] = {
+      videoId,
+      title,
+      currentTime,
+      duration,
+      timestamp: Date.now()
+    };
+    
+    chrome.storage.local.set({watchHistory});
+  });
+}
+
+// 初期実行：ページロード時に視聴履歴から続きを再生
 document.addEventListener('DOMContentLoaded', () => {
+  const videoId = getYouTubeVideoId();
+  if (videoId) {
+    setTimeout(() => {
+      chrome.storage.local.get(['watchHistory'], function(result) {
+        if (result.watchHistory && result.watchHistory[videoId]) {
+          const history = result.watchHistory[videoId];
+          // 動画が始まったばかりで、保存された時間が30秒以上の場合
+          const video = document.querySelector('video');
+          if (video && video.currentTime < 3 && history.currentTime > 30) {
+            // 続きから再生するか確認する通知を表示
+            const resumeTime = formatTime(history.currentTime);
+            
+            // 続きから視聴するUIを表示
+            const resumeDiv = document.createElement('div');
+            resumeDiv.className = 'ytgpc-resume-notification';
+            resumeDiv.style.position = 'fixed';
+            resumeDiv.style.bottom = '70px';
+            resumeDiv.style.left = '20px';
+            resumeDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            resumeDiv.style.color = 'white';
+            resumeDiv.style.padding = '15px';
+            resumeDiv.style.borderRadius = '4px';
+            resumeDiv.style.zIndex = '9999';
+            resumeDiv.style.fontSize = '14px';
+            
+            resumeDiv.innerHTML = `
+              <p>前回 ${resumeTime} まで視聴しました。続きから再生しますか？</p>
+              <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button id="ytgpc-resume-yes" style="padding: 5px 10px; background: #065fd4; border: none; color: white; border-radius: 3px; cursor: pointer;">はい</button>
+                <button id="ytgpc-resume-no" style="padding: 5px 10px; background: #606060; border: none; color: white; border-radius: 3px; cursor: pointer;">いいえ</button>
+              </div>
+            `;
+            
+            document.body.appendChild(resumeDiv);
+            
+            document.getElementById('ytgpc-resume-yes').addEventListener('click', () => {
+              video.currentTime = history.currentTime;
+              resumeDiv.remove();
+              showYouTubeNotification(`${resumeTime} から続きを再生します`);
+            });
+            
+            document.getElementById('ytgpc-resume-no').addEventListener('click', () => {
+              resumeDiv.remove();
+            });
+            
+            // 10秒後に自動で閉じる
+            setTimeout(() => {
+              if (document.body.contains(resumeDiv)) {
+                resumeDiv.remove();
+              }
+            }, 10000);
+          }
+        }
+      });
+    }, 2000); // 動画ロード後に少し待つ
+  }
 });
 
 // ウィンドウメッセージのリスナー（YouTube内での操作用）
