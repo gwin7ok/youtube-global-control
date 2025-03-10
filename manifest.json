@@ -1,0 +1,78 @@
+{
+  "name": "YouTube Global Control",
+  "version": "1.0",
+  "manifest_version": 3,
+  "description": "YouTubeの動画をグローバルショートカットキーで操作",
+  "permissions": ["tabs", "activeTab", "scripting", "storage"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "commands": {
+    "toggle_play_pause": {
+      "suggested_key": {
+        "default": "Alt+Shift+P"
+      },
+      "description": "YouTubeの動画を再生/一時停止"
+    },
+    "toggle_mute": {
+      "suggested_key": {
+        "default": "Alt+Shift+M"
+      },
+      "description": "ミュート切り替え"
+    },
+    "seek_forward": {
+      "suggested_key": {
+        "default": "Alt+Shift+End"
+      },
+      "description": "5秒進める"
+    },
+    "seek_backward": {
+      "suggested_key": {
+        "default": "Alt+Shift+Home"
+      },
+      "description": "5秒戻す"
+    },
+    "volume_up": {
+      "description": "音量を上げる"
+    },
+    "volume_down": {
+      "description": "音量を下げる"
+    },
+    "goto_start": {
+      "description": "動画の最初に移動"
+    },
+    "goto_end": {
+      "description": "動画の最後に移動"
+    },
+    "speed_up": {
+      "description": "再生速度を上げる"
+    },
+    "speed_down": {
+      "description": "再生速度を下げる"
+    },
+    "speed_normal": {
+      "description": "通常の再生速度に戻す"
+    },
+    "toggle_captions": {
+      "description": "字幕表示切り替え"
+    },
+    "next_video": { 
+      "description": "次の動画へ"
+    },
+    "previous_video": {
+      "description": "前の動画へ"
+    },
+    "toggle_bookmark": {
+      "description": "現在位置をブックマーク"
+    },
+    "next_bookmark": {
+      "description": "次のブックマークへ"
+    }
+  }
+}
