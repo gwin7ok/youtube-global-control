@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # YouTube Global Control
 
 YouTubeの動画をグローバルショートカットキーで操作するChrome拡張機能です。
@@ -35,3 +36,6 @@ YouTubeの動画をグローバルショートカットキーで操作するChro
 - Chrome拡張機能 API
 - JavaScript
 - HTML/CSS
+=======
+# youtube-global-control
+>>>>>>> 2fd8f7874586f978a511a9cafe0c74c200436838
