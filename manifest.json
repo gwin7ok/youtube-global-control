@@ -73,6 +73,12 @@
     },
     "next_bookmark": {
       "description": "次のブックマークへ"
+    },
+    "next_chapter": {
+      "description": "次のチャプターへ"
+    },
+    "previous_chapter": {
+      "description": "前のチャプターへ"
     }
   }
 }

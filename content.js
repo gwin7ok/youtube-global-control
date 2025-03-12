@@ -87,6 +87,39 @@ function showYouTubeNotification(message) {
   }, 100);
 }
 
+// 次のチャプターへ移動
+function goToNextChapter() {
+  // 右矢印キーをシミュレート
+  simulateKeyPress('ArrowRight', false, false, false, true);
+  showYouTubeNotification('次のチャプターに移動');
+}
+
+// 前のチャプターへ移動
+function goToPreviousChapter() {
+  // 左矢印キーをシミュレート
+  simulateKeyPress('ArrowLeft', false, false, false, true);
+  showYouTubeNotification('前のチャプターに移動');
+}
+
+// ショートカットキーをシミュレートする関数
+function simulateKeyPress(key, shiftKey = false, ctrlKey = false, altKey = false, isArrow = false) {
+  const keyCode = isArrow ? 
+    (key === 'ArrowRight' ? 39 : key === 'ArrowLeft' ? 37 : 0) : 
+    key.toUpperCase().charCodeAt(0);
+  
+  const event = new KeyboardEvent('keydown', {
+    key: key,
+    code: isArrow ? key : `Key${key.toUpperCase()}`,
+    keyCode: keyCode,
+    shiftKey: shiftKey,
+    ctrlKey: ctrlKey,
+    altKey: altKey,
+    bubbles: true,
+    cancelable: true
+  });
+  document.dispatchEvent(event);
+}
+
 // アクションを実行する関数
 function performAction(action) {
   const video = document.querySelector('video');
@@ -180,6 +213,14 @@ function performAction(action) {
     case 'next_bookmark':
       navigateToNextBookmark(video);
       break;
+      
+    case 'next_chapter':
+      goToNextChapter();
+      break;
+      
+    case 'previous_chapter':
+      goToPreviousChapter();
+      break;
   }
 }
 
@@ -207,19 +248,6 @@ function clickPreviousButton() {
   // ショートカットキーをシミュレート
   simulateKeyPress('P', true);
   showYouTubeNotification('前の動画に移動');
-}
-
-// ショートカットキーをシミュレートする関数
-function simulateKeyPress(key, shiftKey = false) {
-  const event = new KeyboardEvent('keydown', {
-    key: key,
-    code: `Key${key.toUpperCase()}`,
-    keyCode: key.toUpperCase().charCodeAt(0),
-    shiftKey: shiftKey,
-    bubbles: true,
-    cancelable: true
-  });
-  document.dispatchEvent(event);
 }
 
 // ブックマーク機能
