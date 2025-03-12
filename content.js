@@ -90,14 +90,14 @@ function showYouTubeNotification(message) {
 // 次のチャプターへ移動
 function goToNextChapter() {
   // 右矢印キーをシミュレート
-  simulateKeyPress('ArrowRight', false, false, false, true);
+  simulateKeyPress('ArrowRight', false, true, true, true);
   showYouTubeNotification('次のチャプターに移動');
 }
 
 // 前のチャプターへ移動
 function goToPreviousChapter() {
   // 左矢印キーをシミュレート
-  simulateKeyPress('ArrowLeft', false, false, false, true);
+  simulateKeyPress('ArrowLeft', false, true, true, true);
   showYouTubeNotification('前のチャプターに移動');
 }
 
@@ -117,8 +117,18 @@ function simulateKeyPress(key, shiftKey = false, ctrlKey = false, altKey = false
     bubbles: true,
     cancelable: true
   });
+  
   document.dispatchEvent(event);
 }
+
+// ショートカットキーのリスナーを追加
+document.addEventListener('keydown', (event) => {
+  if (event.ctrlKey && event.altKey && event.key === 'ArrowRight') {
+    goToNextChapter();
+  } else if (event.ctrlKey && event.altKey && event.key === 'ArrowLeft') {
+    goToPreviousChapter();
+  }
+});
 
 // アクションを実行する関数
 function performAction(action) {
