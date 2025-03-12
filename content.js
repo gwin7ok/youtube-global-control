@@ -90,14 +90,14 @@ function showYouTubeNotification(message) {
 // 次のチャプターへ移動
 function goToNextChapter() {
   // 右矢印キーをシミュレート
-  simulateKeyPress('ArrowRight', false, true, true, true);
+  simulateKeyPress('ArrowRight', false, true, false, true);
   showYouTubeNotification('次のチャプターに移動');
 }
 
 // 前のチャプターへ移動
 function goToPreviousChapter() {
   // 左矢印キーをシミュレート
-  simulateKeyPress('ArrowLeft', false, true, true, true);
+  simulateKeyPress('ArrowLeft', false, true, false, true);
   showYouTubeNotification('前のチャプターに移動');
 }
 
