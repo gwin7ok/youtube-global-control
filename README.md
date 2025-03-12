@@ -4,6 +4,9 @@ YouTubeの動画をグローバルショートカットキーで操作するChro
 
 ## 使用可能な機能
 
+この拡張機能では、以下のショートカットキーコマンドが定義されています：
+
+### デフォルトで割り当て済み
 - **toggle_play_pause**: YouTubeの動画を再生/一時停止
   - デフォルトキー: `Alt+Shift+P`
 - **toggle_mute**: ミュート切り替え
@@ -12,6 +15,8 @@ YouTubeの動画をグローバルショートカットキーで操作するChro
   - デフォルトキー: `Alt+Shift+End`
 - **seek_backward**: 5秒戻す
   - デフォルトキー: `Alt+Shift+Home`
+
+### 追加で設定可能なコマンド
 - **volume_up**: 音量を上げる
 - **volume_down**: 音量を下げる
 - **goto_start**: 動画の最初に移動
@@ -24,23 +29,16 @@ YouTubeの動画をグローバルショートカットキーで操作するChro
 - **previous_video**: 前の動画へ
 - **toggle_bookmark**: 現在位置をブックマーク
 - **next_bookmark**: 次のブックマークへ
+- **next_chapter**: 次のチャプターへ
+- **previous_chapter**: 前のチャプターへ
 
-## ショートカットキー
+これらのコマンドは、Chrome拡張機能のショートカット設定ページ（chrome://extensions/shortcuts）から自由にキーボードショートカットを割り当てることができます。
 
-- `Alt+Shift+P`: 再生/一時停止
-- `Alt+Shift+M`: ミュート切り替え
-- `Alt+Shift+End`: 5秒進める
-- `Alt+Shift+Home`: 5秒戻す
-
-その他のショートカットキーはChrome拡張機能の設定画面から設定可能です。
 
 ## インストール方法
-
 1. このリポジトリをクローンまたはダウンロードします
     *右上のCode→Download Zip→ダウンロードしたファイルを解凍
 2. Chromeで `chrome://extensions` を開きます
 3. デベロッパーモードを有効にします
 4. 「パッケージ化されていない拡張機能を読み込む」をクリックします
 5. ダウンロードしたファイルを解凍したフォルダを選択します
-
-
