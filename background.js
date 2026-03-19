@@ -58,6 +58,61 @@ function logRegisteredCommands() {
 // サービスワーカー起動時にコマンド一覧をログ
 logRegisteredCommands();
 
+// マニフェストの suggested_key と実際に登録されているショートカットを比較して、不足があればログ出力する
+async function verifyManifestShortcuts(attempts = 3) {
+  try {
+    if (!chrome.commands || !chrome.commands.getAll) return;
+
+    const doCheck = async (remaining) => {
+      const commands = await new Promise(resolve => chrome.commands.getAll(resolve));
+
+      const resp = await fetch(chrome.runtime.getURL('manifest.json'));
+      const manifest = await resp.json();
+      const manifestCommands = manifest.commands || {};
+
+      const missing = [];
+      for (const [name, info] of Object.entries(manifestCommands)) {
+        if (info && info.suggested_key && info.suggested_key.default) {
+          const reg = commands.find(c => c.name === name);
+          const registeredShortcut = reg ? (reg.shortcut || '') : '';
+          if (!registeredShortcut) missing.push({ name, expected: info.suggested_key.default });
+        }
+      }
+
+      if (missing.length > 0) {
+        // 明確なエラーログを出す（toggle_play_pause 未登録時は特に目立たせる）
+        missing.forEach(m => {
+          if (m.name === 'toggle_play_pause') {
+            console.error(`${PREFIX} FAILED to auto-register command '${m.name}' (expected ${m.expected}). This may require manual assignment at chrome://extensions/shortcuts or changing the suggested_key.`);
+          } else {
+            console.warn(`${PREFIX} manifest suggested_key not registered for '${m.name}': expected ${m.expected}`);
+          }
+        });
+
+        // デバッグのために現在の registered commands と manifest を出力
+        console.debug(`${PREFIX} current registered commands:`, commands);
+        console.debug(`${PREFIX} manifest commands:`, manifestCommands);
+
+        if (remaining > 0) {
+          // Chrome の初期化タイミングにより反映が遅れる可能性があるため、数秒後に再試行
+          setTimeout(() => doCheck(remaining - 1), 1000);
+        } else {
+          console.warn(`${PREFIX} verifyManifestShortcuts: no more retries left.`);
+        }
+      } else {
+        console.log(`${PREFIX} manifest の suggested_key と登録済みショートカットは一致しています`);
+      }
+    };
+
+    await doCheck(attempts);
+  } catch (e) {
+    console.error(`${PREFIX} verifyManifestShortcuts failed:`, e);
+  }
+}
+
+// サービスワーカー起動時に検証を行う
+verifyManifestShortcuts();
+
 chrome.runtime.onInstalled && chrome.runtime.onInstalled.addListener && chrome.runtime.onInstalled.addListener(() => {
   console.log(`${PREFIX} onInstalled`);
   logRegisteredCommands();

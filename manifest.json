@@ -3,14 +3,23 @@
   "version": "1.0",
   "manifest_version": 3,
   "description": "YouTubeの動画をグローバルショートカットキーで操作",
-  "permissions": ["tabs", "activeTab", "scripting", "storage"],
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
     {
-      "matches": ["*://www.youtube.com/*"],
-      "js": ["content.js"]
+      "matches": [
+        "*://www.youtube.com/*"
+      ],
+      "js": [
+        "content.js"
+      ]
     }
   ],
   "commands": {
@@ -62,7 +71,7 @@
     "toggle_captions": {
       "description": "字幕表示切り替え"
     },
-    "next_video": { 
+    "next_video": {
       "description": "次の動画へ"
     },
     "previous_video": {
