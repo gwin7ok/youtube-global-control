@@ -37,3 +37,33 @@ chrome.commands.onCommand.addListener((command) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   // 全画面表示機能に関連するコードを削除
 });
+
+// 起動時に登録済みコマンド一覧を出力してデバッグしやすくする
+function logRegisteredCommands() {
+  try {
+    if (chrome.commands && chrome.commands.getAll) {
+      chrome.commands.getAll((commands) => {
+        console.log(`${PREFIX} registered commands:`, commands);
+        const names = commands.map(c => c.name);
+        console.log(`${PREFIX} registered command names:`, names);
+      });
+    } else {
+      console.log(`${PREFIX} chrome.commands.getAll is not available`);
+    }
+  } catch (e) {
+    console.error(`${PREFIX} failed to get commands:`, e);
+  }
+}
+
+// サービスワーカー起動時にコマンド一覧をログ
+logRegisteredCommands();
+
+chrome.runtime.onInstalled && chrome.runtime.onInstalled.addListener && chrome.runtime.onInstalled.addListener(() => {
+  console.log(`${PREFIX} onInstalled`);
+  logRegisteredCommands();
+});
+
+chrome.runtime.onStartup && chrome.runtime.onStartup.addListener && chrome.runtime.onStartup.addListener(() => {
+  console.log(`${PREFIX} onStartup`);
+  logRegisteredCommands();
+});
